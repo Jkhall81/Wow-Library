@@ -1,6 +1,5 @@
 from crud_routes import crud_bp
 from flask import Flask, flash, render_template, redirect, request, url_for
-from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from models import Author, Book, Rating, db
 import config
@@ -123,6 +122,6 @@ def book_details(book_id):
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
     app.run()
