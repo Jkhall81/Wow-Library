@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} Google API!! {% endblock %}
+
+{% block content %}
+<h3 class='text-center mt-5'>Search by Title or ISBN!</h3>
+<div class='mt-5 ms-5'>
+<form action='/search' method='POST'>
+  <div class="mb-3 w-50">
+    <label for="search_term" class="form-label">Book Title</label>
+    <input name='search_term' type="text" class="form-control" id="search_term" aria-describedby="emailHelp">
+
+  <div class="mb-3">
+    <label for="isbn" class="form-label">ISBN</label>
+    <input name='isbn' type="number" class="form-control" id="isbn">
+  </div>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<div>
+{% endblock %}

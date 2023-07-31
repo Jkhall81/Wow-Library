@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %} WOW! Search Results!! {% endblock %}
+
+{% block content %}
+<div class='container'>
+<h1 class='text-center mt-5'>Wow Library Search Results!!</h1>
+<p class='text-center mb-5'>Select the book you wish to add!</p>
+<div class='row row-cols-1 row-cols-md-3 g-4'>
+{% for book in books %}
+<div class='col mb-4'>
+<div class="card h-100">
+  <div class='card-content d-flex flex-column h-100'>
+  {% if book.image_link %}
+  <img src='{{ book.image_link }}' class='card-img-top' alt='{{ book.title }}'>
+  {% endif %}
+  <div class="card-body d-flex flex-column">
+    <h5 class="card-title">{{ book.title }}</h5>
+    <h6 class="card-subtitle mb-2 text-body-secondary"><small>By {{ book.authors | join(', ') }}</small></h6>
+    <p class="card-text">{{ book.publication_date }}</p>
+    <p class="card-text">ISBN: {{ book.isbn }}</p>
+    {% if book.description %}
+    <p class='card-text'>Description: {{ book.description[:150] }}</p>
+    {% endif %}
+    </div>
+    <form action='/crud/add_to_library' method='POST' class='mt-auto'>
+      <input type='hidden' name='book_title' value='{{ book.title }}'>
+      <input type='hidden' name='book_authors' value='{{ book.authors | join(', ') }}'>
+      <input type='hidden' name='book_published_date' value='{{ book.published_date }}'>
+      <input type='hidden' name='book_isbn' value='{{ book.isbn }}'>
+      <input type='hidden' name='book_description' value='{{ book.description }}'>
+      <input type='hidden' name='book_image_link' value='{{ book.image_link }}'>
+      <input type='hidden' name='csrf_token' value='{{ csrf_token() }}'>
+      <button type="submit" class="btn btn-primary mb-3 ms-2">Add to Library</button>
+    </form>
+  </div>
+</div>
+</div>
+{% endfor %}
+</div>
+</div>
+{% endblock %}
