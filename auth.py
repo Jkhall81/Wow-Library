@@ -29,13 +29,13 @@ def login():
 
 
 @auth.route('/logout')
-@login_required
 def logout():
-    logout_user()
+    if current_user.is_authenticated:
+        logout_user()
     return redirect(url_for('auth.login'))
 
 
-@auth.route('/sign-up', methods=['GET' 'POST'])
+@auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
@@ -50,11 +50,11 @@ def sign_up():
         elif password1 != password2:
             flash('Passwords don\'t match.')
         else:
-            new_user = User(email=email, first_name=first_name, last_name=last_name, password=generate_password_hash(password1, method='sha256'))
+            new_user = User(email=email, first_name=first_name, last_name=last_name, password=generate_password_hash(password1, method='scrypt'))
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
             flash('Account created!')
-            return redirect(url_for('/'))
+            return redirect(url_for('home'))
 
     return render_template('sign_up.html', user=current_user)

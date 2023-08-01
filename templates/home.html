@@ -12,7 +12,7 @@
 <div class='col mb-4'>
 <div class="card h-100 shadow-lg">
   {% if book.image_link %}
-  <a href='{{ url_for('book_details', book_id=book.id) }}'>
+  <a href="{{ url_for('book_details', book_id=book.id) }}">
   <img src='{{ book.image_link }}' class='card-img-top' alt='{{ book.title }}'>
   </a>
   {% else %}
@@ -60,7 +60,7 @@
             <div class='modal-footer justify-content-start'>
               <button type='submit' class='btn btn-primary submit-rating-button' data-book-id='{{ book.id }}'>Submit Rating</button>
   </div>
-  </form>
+          </form>
 </div>
 </div>
 </div>

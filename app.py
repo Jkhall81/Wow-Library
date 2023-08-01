@@ -1,7 +1,10 @@
+from auth import auth
 from crud_routes import crud_bp
 from flask import Flask, flash, render_template, redirect, request, url_for
+from flask_login import current_user, LoginManager
+from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
-from models import Author, Book, Rating, db
+from models import Author, Book, Rating, User, db
 import config
 import requests
 
@@ -15,10 +18,21 @@ def average(values):
 app = Flask(__name__)
 app.jinja_env.filters['average'] = average
 app.config.from_object(config)
+migrate = Migrate(app, db)
+app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(crud_bp, url_prefix='/crud')
 db.init_app(app)
 API_KEY = 'AIzaSyDd7MoNSm_LrRzR9keXv_nQcNC4XYXHvPI'
 csrf = CSRFProtect(app)
+
+login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 # Routes
@@ -49,7 +63,7 @@ def home():
         else:
             book.average_rating = 0
 
-    return render_template('home.html', books=books)
+    return render_template('home.html', books=books, user=current_user)
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -84,7 +98,7 @@ def search_books():
 
             return render_template('search_results.html', books=books)
         else:
-            return 'Error occurred while fetching data from Google Books API.'
+            flash('Error occurred while fetching data from Google Books API.')
     else:
         return render_template('search_form.html')
 
@@ -124,4 +138,4 @@ def book_details(book_id):
 if __name__ == '__main__':
     # with app.app_context():
     #     db.create_all()
-    app.run()
+    app.run(debug=True)
