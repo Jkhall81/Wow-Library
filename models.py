@@ -1,3 +1,4 @@
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import CheckConstraint
 
@@ -43,3 +44,19 @@ class Rating(db.Model):
 
     def __repr__(self):
         return f'Rating(value={self.value}, book_id={self.book_id})'
+
+
+user_book_association = db.Table(
+    'user_book_association',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('book_id', db.Integer, db.ForeignKey('book.id'), primary_key=True)
+)
+
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True)
+    password = db.Column(db.String(150))
+    first_name = db.Column(db.String(150))
+    last_name = db.Column(db.String(150))
+    books = db.relationship('Book', secondary=user_book_association, backref=db.backref('users', lazy='dynamic'))
