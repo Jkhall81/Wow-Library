@@ -10,6 +10,12 @@ author_book_association = db.Table(
     db.Column('book_id', db.Integer, db.ForeignKey('book.id'), primary_key=True)
 )
 
+user_book_association = db.Table(
+    'user_book_association',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('book_id', db.Integer, db.ForeignKey('book.id'), primary_key=True)
+)
+
 
 class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -46,13 +52,6 @@ class Rating(db.Model):
         return f'Rating(value={self.value}, book_id={self.book_id})'
 
 
-user_book_association = db.Table(
-    'user_book_association',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('book_id', db.Integer, db.ForeignKey('book.id'), primary_key=True)
-)
-
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
@@ -60,3 +59,19 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
     books = db.relationship('Book', secondary=user_book_association, backref=db.backref('users', lazy='dynamic'))
+
+    def __repr__(self):
+        return f'User(first_name={self.first_name}, last_name={self.last_name})'
+
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    comment_text = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
+
+    user = db.relationship('User', backref='comments')
+    book = db.relationship('Book', backref='comments')
+
+    def __repr__(self):
+        return f'Comment(id={self.id}, comment_text={self.comment_text})'
