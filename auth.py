@@ -32,7 +32,7 @@ def login():
 def logout():
     if current_user.is_authenticated:
         logout_user()
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('home'))
 
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
