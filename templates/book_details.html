@@ -30,18 +30,22 @@
             <p class='p-4'>{{ book.description }}</p>
         </div>
     </div>
+    {% if user.is_authenticated %}
     <div class="p-4 row">
         <div class="col-md-7">
             <div class="list-group">
+                <h5>Comments!</h5>
                 {% for comment in comments %}
-                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ comment.subject }}</h5>
-                        <small>{{ comment.date_posted }}</small>
-                    </div>
-                    <p class="mb-1">{{ comment.comment_text}}</p>
-                    <small>{{ comment.user.first_name}} {{ comment.user.last_name[0] }}.</small>
-                </a>
+                <div class="mt-3 rounded shadow-lg">
+                    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ comment.subject }}</h5>
+                            <small>{{ comment.date_posted.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                        <p class="mb-1">{{ comment.comment_text}}</p>
+                        <small>Posted By: {{ comment.user.first_name}} {{ comment.user.last_name[0] }}.</small>
+                    </a>
+                </div>
                 {% endfor %}
             </div>
         </div>
@@ -66,4 +70,5 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock %}
