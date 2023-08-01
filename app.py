@@ -4,7 +4,7 @@ from flask import Flask, flash, render_template, redirect, request, url_for
 from flask_login import current_user, LoginManager
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
-from models import Author, Book, Rating, User, db
+from models import Author, Book, Comment, Rating, User, db
 import config
 import requests
 
@@ -131,8 +131,39 @@ def rate_book(book_id):
 @app.route('/book_details/<int:book_id>')
 def book_details(book_id):
     book = Book.query.get_or_404(book_id)
+    comments = Comment.query.filter_by(book_id=book_id).all()
+    
+    return render_template('book_details.html', book=book, user=current_user, comments=comments)
 
-    return render_template('book_details.html', book=book)
+
+@app.route('/comments/<int:book_id>', methods=['GET', 'POST'])
+def comments(book_id):
+    if request.method == 'POST':
+        email = request.form.get('email')
+        subject = request.form.get('subject')
+        comment_text = request.form.get('comment')
+
+        user = current_user
+        print(user)
+
+        if user is None:
+            flash('User not found!')
+
+        comment = Comment(book_id=book_id, user_id=user.id, subject=subject, comment_text=comment_text)
+        print('Comment Object:', comment)
+        db.session.add(comment)
+    try:
+        db.session.commit()
+        print('comment successfully saved to database.')
+    except Exception as e:
+        print('Error occurred', e)
+        db.session.rollback()
+        return redirect(url_for('book_details', book_id=book_id))
+
+    comments = Comment.query.filter_by(book_id=book_id).all()
+    print(comments)
+    book = Book.query.get_or_404(book_id)
+    return render_template('book_details.html', book=book, comments=comments, user=current_user)
 
 
 if __name__ == '__main__':

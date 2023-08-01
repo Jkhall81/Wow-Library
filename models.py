@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import CheckConstraint
@@ -66,7 +67,9 @@ class User(db.Model, UserMixin):
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    subject = db.Column(db.Text, nullable=False)
     comment_text = db.Column(db.Text, nullable=False)
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
 
