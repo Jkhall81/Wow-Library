@@ -132,7 +132,7 @@ def rate_book(book_id):
 def book_details(book_id):
     book = Book.query.get_or_404(book_id)
     comments = Comment.query.filter_by(book_id=book_id).all()
-    
+
     return render_template('book_details.html', book=book, user=current_user, comments=comments)
 
 
@@ -169,4 +169,4 @@ def comments(book_id):
 if __name__ == '__main__':
     # with app.app_context():
     #     db.create_all()
-    app.run(debug=True)
+    app.run()
