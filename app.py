@@ -121,9 +121,13 @@ def rate_book(book_id):
 
     if request.method == 'POST':
         rating_value = int(request.form.get('rating'))
-        rating = Rating(value=rating_value, book_id=book.id)
-        db.session.add(rating)
-        db.session.commit()
+        if 0 <= rating_value <= 10:
+            rating = Rating(value=rating_value, book_id=book.id)
+            db.session.add(rating)
+            db.session.commit()
+        else:
+            return redirect(url_for('home'))
+            flash('Rating must be between 0 and 10!')
 
     return redirect(url_for('home'))
 
@@ -169,4 +173,4 @@ def comments(book_id):
 if __name__ == '__main__':
     # with app.app_context():
     #     db.create_all()
-    app.run()
+    app.run(debug=True)

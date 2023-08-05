@@ -60,7 +60,7 @@
             <div class='modal-footer justify-content-start'>
               <button type='submit' class='btn btn-primary submit-rating-button' data-book-id='{{ book.id }}'>Submit Rating</button>
   </div>
-          </form>
+              </form>
 </div>
 </div>
 </div>
@@ -70,11 +70,19 @@
 <script>
   document.addEventListener('click', (event) => {
     if (event.target.classList.contains('submit-rating-button')) {
-      const bookId = event.target.dataset.bookId;
-      const modal = document.querySelector(`#rateModal${bookId}`);
-      const modalInstance = bootstrap.Modal.getInstance(modal);
-      modalInstance.hide();
+      const ratingInput = document.querySelector(`#ratingInput${event.target.dataset.bookId}`);
+      const ratingValue = parseInt(ratingInput.value);
+
+      if (ratingValue >= 0 && ratingValue <= 10) {
+        const bookId = event.target.dataset.bookId;
+        const modal = document.querySelector(`#rateModal${bookId}`);
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        modalInstance.hide();
+      } else {
+        alert('Rating must be between 0 and 10!');
+      }
     }
   });
 </script>
+
 {% endblock %}
