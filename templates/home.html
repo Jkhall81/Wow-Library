@@ -5,84 +5,9 @@
 {% block content %}
 
 <div class='container'>
-<h1 class='mt-5 text-center'>Welcome to Wow Library!!</h1>
-<p class='mb-5 text-center'>Create and Share a Book Collection!</p>
-<div class='row row-cols-1 row-cols-md-3 g-4'>
-{% for book in books %}
-<div class='col mb-4'>
-<div class="card h-100 shadow-lg">
-  {% if book.image_link %}
-  <a href="{{ url_for('book_details', book_id=book.id) }}" data-bs-toggle="tooltip" data-bs-title="Click image to view book details." data-bs-placement="top">
-  <img src='{{ book.image_link }}' class='card-img-top' alt='{{ book.title }}'>
-  </a>
-  {% else %}
-  <img src='/static/placeholder.jpg' class='card-img-top' alt='placeholder'>
-  {% endif %}
-  <div class="card-body d-flex flex-column">
-    <h5 class="card-title">{{ book.title }}</h5>
-    <h6 class="card-subtitle mb-2 text-body-secondary"><small>By {{ book.author.name }}</small></h6>
-    <p class="card-text">{{ book.publication_year }}</p>
-    <p class='card-text'>Average Rating: {{ book.average_rating }}</p>
-    <p class="card-text">ISBN: {{ book.isbn }}</p>
-    {% if book.description %}
-    <p class='card-text'>Description: {{ book.description[:150] }}{% if book.description|length > 150 %}...{% endif %}</p>
-    {% endif %}
-    <div class='d-flex justify-content-between align-items-center mt-auto'>
-    <form action='/crud/delete/{{ book.id }}' method='POST'>
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
-    <button type='button' class='btn btn-dark mt-2' data-bs-toggle='modal' data-bs-target='#rateModal{{ book.id }}'>
-    Rate!</button>
-    </div>
-    </div>
-    </div>
-    </div>
-
-    <!-- Rating Modal -->
-    <div class='modal fade' id='rateModal{{ book.id }}' tabindex='-1' aria-labelledby="rateModalLabel" aria-hidden='true'>
-      <div class='modal-dialog'>
-        <div class='modal-content'>
-          <div class='modal-header'>
-            <h5 class='modal-title' id='rateModalLabel'>Rate This Book!</h5>
-            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='close'></button>
-            </div>
-            <div class='modal-body'>
-              <p><strong>Title:</strong> {{ book.title }}</p>
-              <p><strong>Author:</strong> {{ book.author.name }}</p>
-              <form action='/rate_book/{{ book.id }}' method='POST'>
-                <div class='mb-3'>
-                  <label for='ratingInput' class='form-label'>Rating (0-10)</label>
-                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                  <input name='rating' type='number' class='form-control' id='ratingInput' min='0' max='10'>
-                </div>
-            </div>
-            <div class='modal-footer justify-content-start'>
-              <button type='submit' class='btn btn-primary submit-rating-button' data-book-id='{{ book.id }}'>Submit Rating</button>
-  </div>
-              </form>
+    <h1 class='mt-5 text-center'>Welcome to Wow Library!!</h1>
+    <p class='mb-5 text-center'>Create and Share a Book Collection!</p>
+    <img src="{{ url_for('static', filename='library.jpeg') }}" alt="library image"
+         style="width: 100%;" class="rounded shadow-lg">
 </div>
-</div>
-</div>
-{% endfor %}
-</div>
-</div>
-<script>
-  document.addEventListener('click', (event) => {
-    if (event.target.classList.contains('submit-rating-button')) {
-      const ratingInput = document.querySelector(`#ratingInput${event.target.dataset.bookId}`);
-      const ratingValue = parseInt(ratingInput.value);
-
-      if (ratingValue >= 0 && ratingValue <= 10) {
-        const bookId = event.target.dataset.bookId;
-        const modal = document.querySelector(`#rateModal${bookId}`);
-        const modalInstance = bootstrap.Modal.getInstance(modal);
-        modalInstance.hide();
-      } else {
-        alert('Rating must be between 0 and 10!');
-      }
-    }
-  });
-</script>
-
 {% endblock %}

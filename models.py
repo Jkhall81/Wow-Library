@@ -5,18 +5,6 @@ from sqlalchemy import CheckConstraint
 
 db = SQLAlchemy()
 
-author_book_association = db.Table(
-    'author_book_association',
-    db.Column('author_id', db.Integer, db.ForeignKey('author.id'), primary_key=True),
-    db.Column('book_id', db.Integer, db.ForeignKey('book.id'), primary_key=True)
-)
-
-user_book_association = db.Table(
-    'user_book_association',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('book_id', db.Integer, db.ForeignKey('book.id'), primary_key=True)
-)
-
 
 class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,6 +26,7 @@ class Book(db.Model):
     ratings = db.relationship('Rating', backref='book', lazy=True)
     author = db.relationship('Author', backref='books')
     author_id = db.Column(db.Integer, db.ForeignKey('author.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
         return f'Book(isbn={self.isbn}, title={self.title}, publication_year={self.publication_year}, author_id={self.author_id})'
@@ -59,7 +48,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
-    books = db.relationship('Book', secondary=user_book_association, backref=db.backref('users', lazy='dynamic'))
+    bio = db.Column(db.Text)
 
     def __repr__(self):
         return f'User(first_name={self.first_name}, last_name={self.last_name})'
@@ -72,9 +61,6 @@ class Comment(db.Model):
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
-
-    user = db.relationship('User', backref='comments')
-    book = db.relationship('Book', backref='comments')
 
     def __repr__(self):
         return f'Comment(id={self.id}, comment_text={self.comment_text})'
