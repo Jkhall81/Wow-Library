@@ -4,7 +4,7 @@ from flask import Flask, flash, render_template, redirect, request, url_for
 from flask_login import current_user, LoginManager
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
-from models import Author, Book, Comment, Rating, User, db
+from models import Book, Comment, Rating, User, db
 import config
 import requests
 
@@ -38,8 +38,7 @@ def load_user(id):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    user = current_user
-    return render_template('home.html', user=user)
+    return render_template('home.html', user=current_user)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 from datamanager.sqlalchemy_data_manager import SQAlchemyDataManager
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from forms.forms import UserRegistrationForm
+from forms.forms import UserRegistrationForm, LoginForm
 from models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db
@@ -12,9 +12,10 @@ data_manager = SQAlchemyDataManager('data/library.sqlite')
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+    form = LoginForm(request.form)
+    if request.method == 'POST' and form.validate():
+        email = form.email.data
+        password = form.password.data
 
         user = User.query.filter_by(email=email).first()
         if user:
@@ -28,7 +29,7 @@ def login():
         else:
             flash('Email does not exist.')
 
-    return render_template('login.html', user=current_user)
+    return render_template('login.html', user=current_user, form=form)
 
 
 @auth.route('/logout')
