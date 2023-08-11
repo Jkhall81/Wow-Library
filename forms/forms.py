@@ -20,3 +20,26 @@ class UserRegistrationForm(Form):
 class AddBookForm(Form):
     title = StringField('Title', validators=[validators.InputRequired()])
     isbn = IntegerField('ISBN', validators=[validators.InputRequired()])
+
+
+class LoginForm(Form):
+    email = StringField('Email', validators=[validators.InputRequired(), Email()])
+    password = PasswordField('Password', validators=[validators.InputRequired()])
+
+
+class EditUserForm(Form):
+    first_name = StringField('First Name', validators=[validators.InputRequired()])
+    last_name = StringField('Last Name', validators=[validators.InputRequired()])
+    bio = TextAreaField('Bio')
+
+
+class BookCommentForm(Form):
+    email = StringField('Email', validators=[validators.InputRequired()])
+    subject = StringField('Subject', validators=[validators.InputRequired()])
+    comment_text = TextAreaField('Comment')
+
+
+class EditCommentForm(Form):
+    email = StringField('Email', validators=[validators.InputRequired()])
+    subject = StringField('Subject', validators=[validators.InputRequired()])
+    comment_text = TextAreaField('Comment')

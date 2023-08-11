@@ -19,6 +19,7 @@ class SQAlchemyDataManager():
         new_user = User(first_name=first_name, last_name=last_name, email=email, password=password, bio=bio)
         db.session.add(new_user)
         db.session.commit()
+        return new_user
 
     def add_book(self, params):
         response = requests.get('https://www.googleapis.com/books/v1/volumes', params=params)
