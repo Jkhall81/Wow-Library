@@ -18,8 +18,7 @@ class UserRegistrationForm(Form):
 
 
 class AddBookForm(Form):
-    title = StringField('Title')
-    isbn = IntegerField('ISBN')
+    title = StringField('Title', validators=[validators.InputRequired()])
 
 
 class LoginForm(Form):
@@ -43,3 +42,7 @@ class EditCommentForm(Form):
     email = StringField('Email', validators=[validators.InputRequired()])
     subject = StringField('Subject', validators=[validators.InputRequired()])
     comment_text = TextAreaField('Comment')
+
+
+class RatingForm(Form):
+    value = IntegerField('Rating (0-10)', validators=[validators.InputRequired()])

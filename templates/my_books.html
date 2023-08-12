@@ -21,7 +21,13 @@
     <h5 class="card-title">{{ book.title }}</h5>
     <h6 class="card-subtitle mb-2 text-body-secondary"><small>By {{ book.author.name }}</small></h6>
     <p class="card-text">{{ book.publication_year }}</p>
-    <p class='card-text'>Average Rating: {{ book.average_rating }}</p>
+    <p class='card-text'>
+      {% if average_ratings[book.id] is not none %}
+        Average Rating: {{ "%.2f" % average_ratings[book.id] }}
+      {% else %}
+        Average Rating: N/A
+      {% endif %}
+    </p>
     <p class="card-text">ISBN: {{ book.isbn }}</p>
     {% if book.description %}
     <p class='card-text'>Description: {{ book.description[:150] }}{% if book.description|length > 150 %}...{% endif %}</p>
@@ -49,11 +55,11 @@
             <div class='modal-body'>
               <p><strong>Title:</strong> {{ book.title }}</p>
               <p><strong>Author:</strong> {{ book.author.name }}</p>
-              <form action='/rate_book/{{ book.id }}' method='POST'>
+              <form action="{{ url_for('crud.rate_book', book_id=book.id) }}" method='POST'>
                 <div class='mb-3'>
                   <label for='ratingInput' class='form-label'>Rating (0-10)</label>
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                  <input name='rating' type='number' class='form-control' id='ratingInput' min='0' max='10'>
+                  <input name='rating' type='number' class='form-control' id='ratingInput' min='0' max='10' step="0.1">
                 </div>
             </div>
             <div class='modal-footer justify-content-start'>

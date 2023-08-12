@@ -4,7 +4,7 @@ from forms.forms import UserRegistrationForm, LoginForm
 from models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, logout_user, current_user
 
 auth = Blueprint('auth', __name__)
 data_manager = SQAlchemyDataManager('data/library.sqlite')
@@ -58,7 +58,7 @@ def sign_up():
         elif password != confirm_password:
             flash('Passwords don\'t match.')
         else:
-            new_user = data_manager.add_user(first_name, last_name, email, password=generate_password_hash(password, method='sha256'), bio=bio)
+            new_user = data_manager.add_user(first_name, last_name, email, password=generate_password_hash(password, method='scrypt'), bio=bio)
             login_user(new_user, remember=True)
             flash('Account created!')
             return redirect(url_for('home', user=user))

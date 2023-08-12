@@ -1,7 +1,7 @@
 from datamanager.sqlalchemy_data_manager import SQAlchemyDataManager
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user
-from forms.forms import AddBookForm
+from forms.forms import AddBookForm, RatingForm
 from models import Book, db
 
 crud_bp = Blueprint('crud', __name__)
@@ -10,22 +10,19 @@ data_manager = SQAlchemyDataManager('data/library.sqlite')
 
 @crud_bp.route('/add_book/<int:user_id>', methods=['GET', 'POST'])
 def add_book(user_id):
-    form = AddBookForm()
+    form = AddBookForm(request.form)
     if request.method == 'POST' and form.validate():
-        isbn = request.form.get('isbn')
-        title = request.form.get('title')
+        title = form.title.data
 
         api_params = {
             'key': data_manager.api_key
         }
 
-        if isbn:
-            api_params['q'] = f'isbn:{isbn}'
-        elif title:
+        if title:
             api_params['q'] = f'title:{title}'
 
         new_book = data_manager.add_book(user_id, api_params)
-        if new_book == 200:
+        if new_book:
             flash('New book successfully added!')
             return redirect(url_for('crud.my_books', user_id=current_user.id))
 
@@ -41,10 +38,30 @@ def delete_book(book_id):
         flash('Book deleted successfully')
     else:
         flash('Book not found!')
-    return redirect(url_for('home'))
+    return redirect(url_for('crud.my_books', user_id=current_user.id))
 
 
 @crud_bp.route('/my_books/<int:user_id>', methods=['POST', 'GET'])
 def my_books(user_id):
+    form = RatingForm()
     books = data_manager.get_user_books(user_id)
-    return render_template('my_books.html', books=books)
+
+    average_ratings = {}
+
+    for book in books:
+        average_ratings[book.id] = data_manager.average_rating(book.id)
+
+    return render_template('my_books.html', books=books, form=form, average_ratings=average_ratings)
+
+
+@crud_bp.route('/rate_book/<int:book_id>', methods=['POST', 'GET'])
+def rate_book(book_id):
+    if request.method == 'POST':
+        value = float(request.form['rating'])
+
+        added_rating = data_manager.save_rating(value, book_id)
+        if added_rating == 200:
+            flash('Rating successfully submitted!')
+            return redirect(url_for('crud.my_books', user_id=current_user.id))
+
+    return redirect(url_for('crud.my_books', user_id=current_user.id))

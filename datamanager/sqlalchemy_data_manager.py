@@ -1,5 +1,4 @@
 from models import User, Book, Author, Comment, Rating, db
-from sqlalchemy import func
 import requests
 
 
@@ -37,6 +36,7 @@ class SQAlchemyDataManager():
 
         if response.status_code == 200:
             data = response.json()
+            print(data)
 
             # maybe in the future i want to give the user a list of books and they can choose which to add, for now just one book
             books = []
@@ -67,11 +67,11 @@ class SQAlchemyDataManager():
             if new_book:
                 db.session.add(new_book)
                 db.session.commit()
-                return 200
+                return new_book
 
-    def delete_book(self, book_id, user_id):
+    def delete_book(self, book_id):
         try:
-            book = Book.query.filter_by(user_id=user_id, id=book_id).first()
+            book = Book.query.filter_by(id=book_id).first()
             if book:
                 db.session.delete(book)
                 db.session.commit()
@@ -80,3 +80,18 @@ class SQAlchemyDataManager():
         except ValueError as e:
             db.session.rollback()
             print('An error occurred:', str(e))
+
+    def save_rating(self, value, book_id):
+        new_rating = Rating(value=value, book_id=book_id)
+        if new_rating:
+            db.session.add(new_rating)
+            db.session.commit()
+            return 200
+
+    def average_rating(self, book_id):
+        ratings = Rating.query.filter_by(book_id=book_id).all()
+        if not ratings:
+            return None
+        total_ratings = sum(rating.value for rating in ratings)
+        average_rating = total_ratings / len(ratings)
+        return average_rating
