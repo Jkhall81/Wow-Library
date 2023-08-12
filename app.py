@@ -38,7 +38,7 @@ def load_user(id):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html', user=current_user)
+    return render_template('home.html')
 
 
 if __name__ == '__main__':

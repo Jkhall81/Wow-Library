@@ -4,22 +4,15 @@
 
 {% block content %}
 <div class='mt-4 ms-4 w-50'>
-    <form action='/crud/add_book' method='POST'>
+    <form action="{{ url_for('crud.add_book', user_id=current_user.id) }}" method='POST'>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="mb-3">
-            <label for="author_id" class="form-label">Author ID</label>
-            <input name='author_id' type="number" class="form-control" id="isbn" aria-describedby="author id">
+            {{form.title.label}}
+            {{form.title(class='form-control')}}
         </div>
         <div class="mb-3">
-            <label for="isbn" class="form-label">13 digit isbn</label>
-            <input name='isbn' type="number" class="form-control" id="isbn" aria-describedby="emailHelp">
-        </div>
-        <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input name='title' type="text" class="form-control" id="title">
-        </div>
-        <div class="mb-3">
-            <label for="publication_year" class="form-label">Publication Year</label>
-            <input name='publication_year' type="number" class="form-control" id="publication_year">
+            {{form.isbn.label}}
+            {{form.isbn(class='form-control')}}
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

@@ -22,7 +22,7 @@ def login():
             if check_password_hash(user.password, password):
                 flash('logged in successfully!')
                 login_user(user, remember=True)
-                return redirect(url_for('home'))
+                return redirect(url_for('home', user=user))
             else:
                 flash('Incorrect password, try again.')
 
@@ -36,6 +36,7 @@ def login():
 def logout():
     if current_user.is_authenticated:
         logout_user()
+        flash('You have been successfully logged out!')
     return redirect(url_for('home'))
 
 

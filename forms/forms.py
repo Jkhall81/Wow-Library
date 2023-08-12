@@ -18,8 +18,8 @@ class UserRegistrationForm(Form):
 
 
 class AddBookForm(Form):
-    title = StringField('Title', validators=[validators.InputRequired()])
-    isbn = IntegerField('ISBN', validators=[validators.InputRequired()])
+    title = StringField('Title')
+    isbn = IntegerField('ISBN')
 
 
 class LoginForm(Form):
