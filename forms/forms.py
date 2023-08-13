@@ -39,7 +39,7 @@ class BookCommentForm(Form):
 
 class EditCommentForm(Form):
     subject = StringField('Subject', validators=[validators.InputRequired()])
-    comment_text = TextAreaField('Comment')
+    comment_text = TextAreaField('Comment', validators=[validators.InputRequired()])
 
 
 class RatingForm(Form):

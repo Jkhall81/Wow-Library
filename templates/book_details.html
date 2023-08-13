@@ -38,7 +38,9 @@
                 {% for comment in comments %}
                 <div class="mt-3 rounded shadow-lg">
                     {% if comment.user_id == current_user.id %}
-                    <a href="#" class="list-group-item list-group-item-action bg-secondary" data-bs-toggle="tooltip" data-bs-title="Edit your comment!!!"
+                    <a href="{{ url_for('crud.edit_comment', comment_id=comment.id) }}" class="list-group-item list-group-item-action bg-secondary"
+                       data-bs-toggle="tooltip"
+                       data-bs-title="Edit your comment!!!"
                        data-bs-placement="top" aria-current="true">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">{{ comment.subject }}</h5>

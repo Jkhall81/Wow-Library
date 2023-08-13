@@ -1,7 +1,7 @@
 from datamanager.sqlalchemy_data_manager import SQAlchemyDataManager
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user
-from forms.forms import AddBookForm, RatingForm, BookCommentForm
+from forms.forms import AddBookForm, RatingForm, BookCommentForm, EditCommentForm
 from models import Book, Comment, db
 
 crud_bp = Blueprint('crud', __name__)
@@ -83,3 +83,20 @@ def book_details(book_id):
             return redirect(url_for('crud.book_details', book_id=book.id, book=book, form=form, comments=comments))
 
     return render_template('book_details.html', book=book, form=form, comments=comments, first_name=first_name, last_name=last_name)
+
+
+@crud_bp.route('/edit_comment/<int:comment_id>', methods=['POST', 'GET'])
+def edit_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    form = EditCommentForm(request.form)
+
+    # I'm too lazy to make a function for this, its not much code anyway
+    if request.method == 'POST':
+        comment.subject = form.subject.data
+        comment.comment_text = form.comment_text.data
+
+        db.session.commit()
+        flash('Comment successfully updated!')
+        return redirect(url_for('crud.book_details', book_id=comment.book_id))
+
+    return render_template('edit_comment.html', comment_id=comment_id, form=form)
