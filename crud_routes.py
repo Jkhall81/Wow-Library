@@ -1,8 +1,8 @@
 from datamanager.sqlalchemy_data_manager import SQAlchemyDataManager
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user
-from forms.forms import AddBookForm, RatingForm
-from models import Book, db
+from forms.forms import AddBookForm, RatingForm, BookCommentForm
+from models import Book, Comment, db
 
 crud_bp = Blueprint('crud', __name__)
 data_manager = SQAlchemyDataManager('data/library.sqlite')
@@ -70,4 +70,16 @@ def rate_book(book_id):
 @crud_bp.route('/book_details/<int:book_id>', methods=['POST', 'GET'])
 def book_details(book_id):
     book = Book.query.filter_by(id=book_id).first()
-    return render_template('book_details.html', book=book)
+    form = BookCommentForm(request.form)
+    comments = Comment.query.filter_by(book_id=book_id).all()
+    first_name, last_name = data_manager.get_name(current_user.id)
+    if request.method == 'POST' and form.validate():
+        subject = form.subject.data
+        comment_text = form.comment_text.data
+
+        new_comment = data_manager.add_comment(subject, comment_text, book_id, current_user.id)
+        if new_comment:
+            flash('Comment successfully submitted!')
+            return redirect(url_for('crud.book_details', book_id=book.id, book=book, form=form, comments=comments))
+
+    return render_template('book_details.html', book=book, form=form, comments=comments, first_name=first_name, last_name=last_name)

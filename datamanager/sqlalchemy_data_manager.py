@@ -95,3 +95,15 @@ class SQAlchemyDataManager():
         total_ratings = sum(rating.value for rating in ratings)
         average_rating = total_ratings / len(ratings)
         return average_rating
+
+    def add_comment(self, subject, comment_text, book_id, user_id):
+        new_comment = Comment(subject=subject, comment_text=comment_text, book_id=book_id, user_id=user_id)
+        if new_comment:
+            db.session.add(new_comment)
+            db.session.commit()
+            return new_comment
+
+    def get_name(self, user_id):
+        user = User.query.get(user_id)
+        if user:
+            return user.first_name, user.last_name

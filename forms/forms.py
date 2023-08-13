@@ -33,13 +33,11 @@ class EditUserForm(Form):
 
 
 class BookCommentForm(Form):
-    email = StringField('Email', validators=[validators.InputRequired()])
     subject = StringField('Subject', validators=[validators.InputRequired()])
-    comment_text = TextAreaField('Comment')
+    comment_text = TextAreaField('Comment', validators=[validators.InputRequired()])
 
 
 class EditCommentForm(Form):
-    email = StringField('Email', validators=[validators.InputRequired()])
     subject = StringField('Subject', validators=[validators.InputRequired()])
     comment_text = TextAreaField('Comment')
 
