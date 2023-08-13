@@ -65,3 +65,9 @@ def rate_book(book_id):
             return redirect(url_for('crud.my_books', user_id=current_user.id))
 
     return redirect(url_for('crud.my_books', user_id=current_user.id))
+
+
+@crud_bp.route('/book_details/<int:book_id>', methods=['POST', 'GET'])
+def book_details(book_id):
+    book = Book.query.filter_by(id=book_id).first()
+    return render_template('book_details.html', book=book)

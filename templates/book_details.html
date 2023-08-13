@@ -7,7 +7,7 @@
     <div class='row'>
         <div class='col-md-4'>
             <div class='d-flex justify-content-center'>
-                <img src='{{ book.image_link }}' class='ms-5 img-fluid mb-3' alt='{{ book.title }}' style='width: 100%; padding-top: 20px;'>
+                <img src='{{ book.image_link }}' class='ms-5 rounded img-fluid mb-3' alt='{{ book.title }}' style='width: 100%; padding-top: 20px;'>
             </div>
         </div>
         <div class='col-md-8'>
@@ -17,7 +17,7 @@
                 <p class='text-center mb-0'><strong>Publication Year:</strong> {{ book.publication_year }}</p>
                 {% if book.ratings %}
                 {% set ratings_list = book.ratings|map(attribute='value')|list %}
-                <p class='text-center mb-4'><strong>Average Rating:</strong> {{ ratings_list|average }}</p>
+                <p class='text-center mb-4'><strong>Average Rating:</strong> {{ "%.2f" % ratings_list|average }}</p>
                 {% else %}
                 <p class='text-center mb-4'>No rating yet.</p>
                 {% endif %}
@@ -30,7 +30,7 @@
             <p class='p-4'>{{ book.description }}</p>
         </div>
     </div>
-    {% if user.is_authenticated %}
+    {% if current_user.is_authenticated %}
     <div class="p-4 row">
         <div class="col-md-7">
             <div class="list-group">
@@ -51,7 +51,7 @@
         </div>
         <div class="col-md-5">
             <h5 class="mb-4">Read this book? Leave a comment!</h5>
-            <form action="{{ url_for('comments', book_id=book.id) }}" method="POST">
+            <form action="#" method="POST">
                 <div class="form-floating mb-3">
                     <input name='email' type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                     <label for="floatingInput">Email address</label>
