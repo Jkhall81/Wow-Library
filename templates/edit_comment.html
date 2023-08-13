@@ -8,11 +8,11 @@
     <form action="{{ url_for('crud.edit_comment', comment_id=comment_id) }}" method="POST">
         <div class="mb-3">
             {{form.subject.label}}
-            {{form.subject(class='form-control') }}
+            {{form.subject(class='form-control', value=comment.subject) }}
         </div>
         <div>
             {{form.comment_text.label}}
-            {{form.comment_text(class='form-control custom-textarea', rows=6) }}
+            {{form.comment_text(class='form-control custom-textarea', rows=6, value=comment.comment_text) }}
         </div>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <button type="submit" class="mt-4 btn btn-dark">Submit</button>

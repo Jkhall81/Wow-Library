@@ -91,7 +91,7 @@ def edit_comment(comment_id):
     form = EditCommentForm(request.form)
 
     # I'm too lazy to make a function for this, its not much code anyway
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate():
         comment.subject = form.subject.data
         comment.comment_text = form.comment_text.data
 
@@ -99,4 +99,4 @@ def edit_comment(comment_id):
         flash('Comment successfully updated!')
         return redirect(url_for('crud.book_details', book_id=comment.book_id))
 
-    return render_template('edit_comment.html', comment_id=comment_id, form=form)
+    return render_template('edit_comment.html', comment_id=comment_id, form=form, comment=comment)
