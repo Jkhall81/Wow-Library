@@ -8,11 +8,13 @@
     <div class="row g-0">
         <div class="col-md-4">
             {% if user.profile_image %}
-            <a href="#" data-bs-toggle="tooltip" data-bs-title="Click image to view book details." data-bs-placement="top">
+            <a href="{{ url_for('crud.my_books', user_id=user.id) }}" data-bs-toggle="tooltip" data-bs-title="Click image to view this user's books!"
+               data-bs-placement="top">
+                <!-- the slice knocks off the uploaded/ from the front of the filename.  Ninja slice. -->
                 <img src="{{ url_for('crud.uploaded_file', filename=user.profile_image[8:]) }}" class="img-fluid rounded-start" alt="uploaded profile image">
             </a>
             {% else %}
-            <a href="#" data-bs-toggle="tooltip" data-bs-title="Click image to view book details.">
+            <a href="{{ url_for('crud.my_books', user_id=user.id) }}" data-bs-toggle="tooltip" data-bs-title="Click image to view this user's books!">
                 <img src="{{ url_for('static', filename='default_profile_image.jpg') }}" class="img-fluid rounded-start" alt="default profile image">
             </a>
             {% endif %}
