@@ -12,7 +12,7 @@
         </div>
         <div>
             {{form.comment_text.label}}
-            {{form.comment_text(class='form-control custom-textarea', rows=6, value=comment.comment_text) }}
+            {{form.comment_text(class='form-control custom-textarea', value=comment.comment_text, rows=6) }}
         </div>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <button type="submit" class="mt-4 btn btn-dark">Submit</button>

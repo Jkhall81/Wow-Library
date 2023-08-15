@@ -5,8 +5,6 @@ from flask_login import current_user, LoginManager
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
 from models import Book, Comment, Rating, User, db
-import config
-import requests
 
 
 def average(values):
@@ -17,7 +15,7 @@ def average(values):
 
 app = Flask(__name__)
 app.jinja_env.filters['average'] = average
-app.config.from_object(config)
+app.config.from_object('config')
 migrate = Migrate(app, db)
 app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(crud_bp, url_prefix='/crud')
@@ -38,7 +36,7 @@ def load_user(id):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html')
+    return render_template('home.html', user=current_user)
 
 
 if __name__ == '__main__':

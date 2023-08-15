@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="mt-5 container w-75">
-    <form action="{{url_for('auth.sign_up')}}" method="POST" class="row g-3">
+    <form action="{{url_for('auth.sign_up')}}" method="POST" enctype="multipart/form-data" class="row g-3">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="col-md-6">
             {{form.first_name.label}}
@@ -31,7 +31,11 @@
             {{form.bio(class='form-control', rows=6)}}
         </div>
         <div class="col-12">
-            <button type="submit" class="btn btn-dark">Sign in</button>
+            {{form.profile_image.label}}
+            {{form.profile_image(class='form-control', accept='.jpg, .png, .jpeg') }}
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-dark">Register</button>
         </div>
     </form>
 </div>

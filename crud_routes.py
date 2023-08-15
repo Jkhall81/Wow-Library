@@ -1,5 +1,5 @@
 from datamanager.sqlalchemy_data_manager import SQAlchemyDataManager
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, redirect, render_template, request, send_from_directory, url_for
 from flask_login import current_user
 from forms.forms import AddBookForm, RatingForm, BookCommentForm, EditCommentForm
 from models import Book, Comment, db
@@ -89,6 +89,7 @@ def book_details(book_id):
 def edit_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     form = EditCommentForm(request.form)
+    print(comment.comment_text)
 
     # I'm too lazy to make a function for this, its not much code anyway
     if request.method == 'POST' and form.validate():
@@ -100,3 +101,14 @@ def edit_comment(comment_id):
         return redirect(url_for('crud.book_details', book_id=comment.book_id))
 
     return render_template('edit_comment.html', comment_id=comment_id, form=form, comment=comment)
+
+
+@crud_bp.route('/all_users')
+def all_users():
+    users = data_manager.get_all_users()
+    return render_template('all_users.html', users=users, user=current_user)
+
+
+@crud_bp.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory('uploads', filename)

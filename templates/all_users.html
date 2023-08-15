@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %} Users! {% endblock %}
+
+{% block content %}
+{% for user in users %}
+<div class="ms-5 mt-5 card border-light mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+        <div class="col-md-4">
+            {% if user.profile_image %}
+            <a href="#" data-bs-toggle="tooltip" data-bs-title="Click image to view book details." data-bs-placement="top">
+                <img src="{{ url_for('crud.uploaded_file', filename=user.profile_image[8:]) }}" class="img-fluid rounded-start" alt="uploaded profile image">
+            </a>
+            {% else %}
+            <a href="#" data-bs-toggle="tooltip" data-bs-title="Click image to view book details.">
+                <img src="{{ url_for('static', filename='default_profile_image.jpg') }}" class="img-fluid rounded-start" alt="default profile image">
+            </a>
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ user.first_name|capitalize }} {{ user.last_name[0]|capitalize }}</h5>
+                <p class="card-text">{{ user.bio }}</p>
+                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

@@ -1,4 +1,5 @@
 from models import User, Book, Author, Comment, Rating, db
+import config
 import requests
 
 
@@ -25,8 +26,10 @@ class SQAlchemyDataManager():
         books = Book.query.filter_by(user_id=user_id)
         return books
 
-    def add_user(self, first_name, last_name, email, password, bio):
+    def add_user(self, first_name, last_name, email, password, bio, profile_image=None):
         new_user = User(first_name=first_name, last_name=last_name, email=email, password=password, bio=bio)
+        if profile_image:
+            new_user.profile_image = profile_image
         db.session.add(new_user)
         db.session.commit()
         return new_user

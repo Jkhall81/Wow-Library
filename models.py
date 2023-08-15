@@ -49,6 +49,7 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
     bio = db.Column(db.Text)
+    profile_image = db.Column(db.String(255))
 
     def __repr__(self):
         return f'User(first_name={self.first_name}, last_name={self.last_name})'

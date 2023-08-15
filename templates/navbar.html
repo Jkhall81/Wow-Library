@@ -40,6 +40,24 @@
                     <a class="nav-link" href="{{ url_for('crud.add_book', user_id=current_user.id) }}">Add Book</a>
                 </li>
                 {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('crud.all_users') }}">User's Collections</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Your Account
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Edit Personal Info</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete Your Account!</a></li>
+                    </ul>
+                </li>
+                {% endif %}
             </ul>
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -48,3 +66,31 @@
         </div>
     </div>
 </nav>
+{% if current_user.is_authenticated %}
+<!-- Delete Account Modal -->
+<div class="modal" id="deleteAccountModal" data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1" aria-labelledby="staticBackdropLabel"
+     aria-hidden="true" style="position: absolute;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Your Account!</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('auth.delete_user', user_id=user.id) }}" method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value={{user.email}}>
+
+                        <label for="password" class="form-label">Confirm Your Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <button type="submit" class="btn btn-danger">Delete Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
