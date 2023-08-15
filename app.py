@@ -1,4 +1,5 @@
 from auth import auth
+from context_processors import inject_current_user
 from crud_routes import crud_bp
 from flask import Flask, flash, render_template, redirect, request, url_for
 from flask_login import current_user, LoginManager
@@ -34,9 +35,14 @@ def load_user(id):
 
 # Routes
 
+@app.context_processor
+def inject_user():
+    return inject_current_user()
+
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html', user=current_user)
+    return render_template('home.html')
 
 
 if __name__ == '__main__':

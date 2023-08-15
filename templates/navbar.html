@@ -81,7 +81,7 @@
                 <form action="{{ url_for('auth.delete_user', user_id=current_user.id) }}" method="POST">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value={{user.email}}>
+                        <input type="email" class="form-control" id="email" name="email" value={{current_user.email}}>
 
                         <label for="password" class="form-label">Confirm Your Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>

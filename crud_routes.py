@@ -24,9 +24,9 @@ def add_book(user_id):
         new_book = data_manager.add_book(user_id, api_params)
         if new_book:
             flash('New book successfully added!')
-            return redirect(url_for('crud.my_books', user_id=current_user.id, user=current_user))
+            return redirect(url_for('crud.my_books', user_id=current_user.id))
 
-    return render_template('add_book.html', form=form, user=current_user)
+    return render_template('add_book.html', form=form)
 
 
 @crud_bp.route('/delete/<int:book_id>', methods=['POST'])
@@ -51,7 +51,7 @@ def my_books(user_id):
     for book in books:
         average_ratings[book.id] = data_manager.average_rating(book.id)
 
-    return render_template('my_books.html', books=books, form=form, average_ratings=average_ratings, user=current_user)
+    return render_template('my_books.html', books=books, form=form, average_ratings=average_ratings)
 
 
 @crud_bp.route('/rate_book/<int:book_id>', methods=['POST', 'GET'])
@@ -79,7 +79,7 @@ def book_details(book_id):
         new_comment = data_manager.add_comment(subject, comment_text, book_id, current_user.id)
         if new_comment:
             flash('Comment successfully submitted!')
-            return redirect(url_for('crud.book_details', book_id=book.id, book=book, form=form, comments=comments, user=current_user))
+            return redirect(url_for('crud.book_details', book_id=book.id, book=book, form=form, comments=comments))
 
     comments_with_user_info = []
     for comment in comments:
@@ -90,7 +90,7 @@ def book_details(book_id):
             'user': user,
         })
 
-    return render_template('book_details.html', book=book, form=form, comments=comments_with_user_info, user=current_user)
+    return render_template('book_details.html', book=book, form=form, comments=comments_with_user_info)
 
 
 @crud_bp.route('/edit_comment/<int:comment_id>', methods=['POST', 'GET'])
@@ -106,15 +106,15 @@ def edit_comment(comment_id):
 
         db.session.commit()
         flash('Comment successfully updated!')
-        return redirect(url_for('crud.book_details', book_id=comment.book_id, user=current_user))
+        return redirect(url_for('crud.book_details', book_id=comment.book_id))
 
-    return render_template('edit_comment.html', comment_id=comment_id, form=form, comment=comment, user=current_user)
+    return render_template('edit_comment.html', comment_id=comment_id, form=form, comment=comment)
 
 
 @crud_bp.route('/all_users')
 def all_users():
     users = data_manager.get_all_users()
-    return render_template('all_users.html', users=users, user=current_user)
+    return render_template('all_users.html', users=users)
 
 
 @crud_bp.route('/uploads/<filename>')

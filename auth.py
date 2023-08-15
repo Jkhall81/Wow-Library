@@ -30,7 +30,7 @@ def login():
         else:
             flash('Email does not exist.')
 
-    return render_template('login.html', user=current_user, form=form)
+    return render_template('login.html', form=form)
 
 
 @auth.route('/logout')
