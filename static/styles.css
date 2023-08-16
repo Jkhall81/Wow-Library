@@ -2,3 +2,25 @@
     height: 250px !important;
     resize: vertical;
 }
+
+ .theme-button {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+    }
+
+    .theme-button i {
+        pointer-events: none; /* Prevent the icon from being clickable */
+    }
+
+    .theme-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }

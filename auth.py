@@ -13,6 +13,7 @@ data_manager = SQAlchemyDataManager('data/library.sqlite')
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    user_theme = request.args.get('theme')
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
         email = form.email.data
@@ -23,7 +24,7 @@ def login():
             if check_password_hash(user.password, password):
                 flash('logged in successfully!')
                 login_user(user, remember=True)
-                return redirect(url_for('home', user=user))
+                return redirect(url_for('home', user=user, theme=user_theme))
             else:
                 flash('Incorrect password, try again.')
 

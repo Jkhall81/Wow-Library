@@ -33,12 +33,20 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-# Routes
+# context processing routes
 
 @app.context_processor
 def inject_user():
     return inject_current_user()
 
+
+@app.context_processor
+def inject_user_theme():
+    user_theme = request.args.get('theme')
+    return {'user_theme': user_theme}
+
+
+# Routes
 
 @app.route('/', methods=['GET', 'POST'])
 def home():

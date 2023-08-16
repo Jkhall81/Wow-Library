@@ -9,7 +9,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% if not current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ url_for('auth.login') }}">Login</a>
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('auth.login', theme=user_theme) }}">Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('auth.sign_up') }}">Register</a>
@@ -17,9 +17,6 @@
                 {% else %}
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ url_for('crud.my_books', user_id=current_user.id) }}">My Books</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
                 </li>
                 {% endif %}
                 <li class="nav-item dropdown">
@@ -50,7 +47,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Edit Personal Info</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -59,12 +56,38 @@
                 </li>
                 {% endif %}
             </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <button class="nav-link theme-button" onClick="myFunction()"><i id="themeIcon" class="bi bi-moon-stars-fill"></i></button>
+                </li>
+            </ul>
+            {% if current_user.is_authenticated and 'crud.my_books' in request.endpoint %}
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-light" type="submit">Search</button>
             </form>
+            {% endif %}
         </div>
     </div>
+    <script>
+        function myFunction() {
+            let element = document.body;
+            let newTheme = element.dataset.bsTheme =
+            element.dataset.bsTheme == 'dark' ? 'light' : 'dark';
+
+            const themeIcon = document.getElementById('themeIcon');
+            themeIcon.classList.toggle('bi-moon-stars-fill');
+            themeIcon.classList.toggle('bi-brightness-high');
+
+            let url = new URL(window.location.href);
+            url.searchParams.set('theme', newTheme);
+            history.replaceState(null, null, url);
+
+        }
+
+        const themeIcon = document.getElementById('themeIcon');
+        themeIcon.addEventListener('click', myFunction);
+    </script>
 </nav>
 {% if current_user.is_authenticated %}
 <!-- Delete Account Modal -->
