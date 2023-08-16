@@ -9,7 +9,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% if not current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ url_for('auth.login', theme=user_theme) }}">Login</a>
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('auth.login') }}">Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('auth.sign_up') }}">Register</a>
@@ -75,18 +75,27 @@
             let newTheme = element.dataset.bsTheme =
             element.dataset.bsTheme == 'dark' ? 'light' : 'dark';
 
-            const themeIcon = document.getElementById('themeIcon');
-            themeIcon.classList.toggle('bi-moon-stars-fill');
-            themeIcon.classList.toggle('bi-brightness-high');
+           localStorage.setItem('userTheme', newTheme);
 
             let url = new URL(window.location.href);
             url.searchParams.set('theme', newTheme);
             history.replaceState(null, null, url);
-
+            location.reload()
         }
 
+        const storedTheme = localStorage.getItem('userTheme');
+
+        if (storedTheme) {
+        document.body.dataset.bsTheme = storedTheme;
         const themeIcon = document.getElementById('themeIcon');
-        themeIcon.addEventListener('click', myFunction);
+        if (storedTheme === 'dark') {
+            themeIcon.classList.add('bi-brightness-high');
+            themeIcon.classList.remove('bi-moon-stars-fill');
+        } else {
+            themeIcon.classList.remove('bi-brightness-high');
+            themeIcon.classList.add('bi-moon-stars-fill');
+        }
+      }
     </script>
 </nav>
 {% if current_user.is_authenticated %}
